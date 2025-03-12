@@ -73,7 +73,11 @@
   ```
 - Opret en fil kaldet `.dockerignore` i samme mappe som din Dockerfile med følgende indhold:
   ```
-  _D
+  __pycache__/
+  logs/
+  .git/
+  .DS_Store
+  .env
   ```
 - Kontrollér, at filen er oprettet korrekt:
   ```bash
@@ -83,7 +87,7 @@
   ```bash
   docker build -t myapp .
   ```
-- Slet eller omdøb midlertidigt din `.dockerignore` fil og byg imaget igen:
+- Slet eller omdøb midlertidigt `.dockerignore` filen og byg imaget igen:
   ```bash
   mv .dockerignore dockerignore_old
   docker build -t myapp_nodockerignore .
@@ -93,30 +97,75 @@
   docker images | grep myapp
   ```
 
-**Diskussion:**
-
-- Hvorfor er det vigtigt at bruge `.dockerignore`?
-- Hvilke filer er typisk gode at ekskludere fra et Docker-image?
-
 ---
 
 ## Øvelse 4: Multi-stage build for at optimere image-størrelse
 
+**Beskrivelse:**
+
+Multi-stage builds reducerer størrelsen på Docker-images ved at adskille byggefasen fra det endelige runtime-miljø. Dette eksempel tydeliggør effekten af multi-stage builds.
+
 **Opgaver:**
 
-- Multi-stage Dockerfile:
-  ```dockerfile
-  FROM python:3.9-alpine AS builder
-  WORKDIR /app
-  COPY requirements.txt ./
-  RUN pip install --no-cache-dir -r requirements.txt
-  COPY . .
+1. **Simuler byggeproces:**
 
-  FROM python:3.9-alpine
-  WORKDIR /app
-  COPY --from=builder /app /app
-  CMD ["python", "app.py"]
-  ```
+- Opret `build.py` med:
+```python
+with open("largefile.tmp", "wb") as f:
+    f.seek(1024 * 1024 * 50 - 1)  # 50 MB
+    f.write(b"\0")
+print("Build complete")
+```
+
+- Tilføj til `requirements.txt`:
+```
+flask==2.0.2
+requests==2.27.1
+```
+
+- Dockerfile (uden multi-stage):
+```dockerfile
+FROM python:3.9-alpine
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+RUN python build.py
+CMD ["python", "app.py"]
+```
+
+- Byg og noter størrelse:
+```bash
+docker build -t myapp_standard .
+docker images | grep myapp_standard
+```
+
+2. **Multi-stage Dockerfile:**
+```dockerfile
+FROM python:3.9-alpine AS builder
+WORKDIR /app
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+RUN python build.py
+
+FROM python:3.9-alpine
+WORKDIR /app
+COPY --from=builder /app /app
+RUN rm largefile.tmp
+CMD ["python", "app.py"]
+```
+
+- Byg multi-stage image:
+```bash
+docker build -t myapp_multistage .
+docker images | grep myapp_multistage
+```
+- Sammenlign størrelsen med det første image.
+
+**Diskussion:**
+- Hvorfor er multi-stage en fordel?
+- Hvordan kan du anvende multi-stage builds i praksis?
 
 ---
 
@@ -125,14 +174,14 @@
 **Opgaver:**
 
 - Dockerfile med ikke-root bruger:
-  ```dockerfile
-  FROM python:3.9-alpine
-  WORKDIR /app
-  RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-  USER appuser
-  COPY . .
-  CMD ["python", "app.py"]
-  ```
+```dockerfile
+FROM python:3.9-alpine
+WORKDIR /app
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+COPY . .
+CMD ["python", "app.py"]
+```
 
 ---
 
@@ -141,9 +190,9 @@
 **Opgaver:**
 
 - Scan image med Docker Scout:
-  ```bash
-  docker scout report myapp
-  ```
+```bash
+docker scout report myapp
+```
 
 ---
 
