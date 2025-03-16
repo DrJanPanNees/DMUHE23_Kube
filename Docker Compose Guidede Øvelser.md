@@ -149,7 +149,7 @@ Dette dokument indeholder en række guidede øvelser i Docker Compose, baseret p
 
 ---
 
-## **Øvelse 4: Brug af .env filer**
+## **Øvelse 4: Brug af config.env filer**
 
 ### **Metadata**
 - **Formål**: Separere konfiguration fra kode.
@@ -158,7 +158,7 @@ Dette dokument indeholder en række guidede øvelser i Docker Compose, baseret p
 - **Relevans**: Best practice i DevOps.
 
 ### **Opgave**
-1. Opret en `.env`-fil:
+1. Opret en `config.env`-fil:
    ```env
    MYSQL_ROOT_PASSWORD=rootpassword
    MYSQL_DATABASE=mydb
@@ -174,7 +174,7 @@ Dette dokument indeholder en række guidede øvelser i Docker Compose, baseret p
 
 3. Start igen:
    ```sh
-   docker-compose up --env-file .env -d
+   docker-compose up --env-file config.env -d
    ```
 
 ---
@@ -194,7 +194,7 @@ Dette dokument indeholder en række guidede øvelser i Docker Compose, baseret p
    - En database (MySQL, PostgreSQL, MongoDB etc.).
    - En reverse proxy eller en cache (Nginx, Redis, eller Traefik).
 
-2. Implementer `.env`-filer til at håndtere konfiguration.
+2. Implementer `config.env`-filer til at håndtere konfiguration.
 
 3. Brug `volumes` til at sikre persistens for databasen.
 
