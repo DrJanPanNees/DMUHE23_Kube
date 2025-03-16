@@ -179,53 +179,27 @@ Dette dokument indeholder en række guidede øvelser i Docker Compose, baseret p
 
 ---
 
-## **Bonus Opgave: Load Balancing med Nginx**
+## **Bonus Opgave: Udarbejd Dit Eget Docker Compose Setup**
 
 ### **Metadata**
-- **Formål**: Demonstrere hvordan Nginx kan bruges til load balancing.
+- **Formål**: Udfordre de studerende til at anvende deres viden til at designe deres egen løsning.
 - **Læringsmål**:
-  - Lære at konfigurere Nginx som en reverse proxy.
-  - Lære at sætte flere instanser op af en service.
-- **Relevans**: Load balancing er afgørende for skalerbare applikationer.
+  - Anvende Docker Compose til at bygge et funktionelt setup.
+  - Strukturere services, netværk og persistens baseret på behov.
+- **Relevans**: Selvstændig problemløsning er en vigtig del af DevOps-arbejde.
 
 ### **Opgave**
-1. Opret en **nginx.conf**:
-   ```nginx
-   upstream backend {
-       server app1:3000;
-       server app2:3000;
-   }
-   server {
-       listen 80;
-       location / {
-           proxy_pass http://backend;
-       }
-   }
-   ```
+1. Design en `docker-compose.yml`-fil, der indeholder mindst tre services, f.eks.:
+   - En applikation (kan være Node.js, Python, PHP eller andet efter eget valg).
+   - En database (MySQL, PostgreSQL, MongoDB etc.).
+   - En reverse proxy eller en cache (Nginx, Redis, eller Traefik).
 
-2. Opdater **docker-compose.yml**:
-   ```yaml
-   services:
-     app1:
-       build: ./app
-     app2:
-       build: ./app
-     nginx:
-       image: nginx
-       volumes:
-         - ./nginx.conf:/etc/nginx/nginx.conf
-       ports:
-         - "8080:80"
-   ```
+2. Implementer `.env`-filer til at håndtere konfiguration.
 
-3. Start systemet:
-   ```sh
-   docker-compose up -d
-   ```
+3. Brug `volumes` til at sikre persistens for databasen.
 
-4. Test load balancing ved at lave flere requests.
+4. Start dit setup og verificér, at services kører korrekt med `docker ps` og `docker logs`.
+
+5. Dokumentér din løsning med en kort README.md-fil, der forklarer din arkitektur og brug.
 
 ---
-
-## **Afslutning**
-Disse øvelser giver praktisk erfaring med Docker Compose og inkluderer en bonusopgave for avancerede studerende.
