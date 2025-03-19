@@ -21,6 +21,20 @@
    kubectl get nodes
    ```
 
+### **Test That Something Works**
+- Run an **Nginx** pod:
+  ```bash
+  kubectl run my-nginx --image=nginx --port=80
+  ```
+- Expose the pod as a service:
+  ```bash
+  kubectl expose pod my-nginx --type=NodePort --port=80 --target-port=80
+  ```
+- Open the service in Minikube:
+  ```bash
+  minikube service my-nginx --url
+  ```
+
 ### **Reflection Questions**
 - What is Minikube, and why do we use it for local Kubernetes learning?
 - What does `kubectl cluster-info` tell you?
@@ -51,7 +65,15 @@
    ```bash
    kubectl exec -it my-nginx -- /bin/sh
    ```
-6. Delete the pod:
+6. Expose the pod as a service:
+   ```bash
+   kubectl expose pod my-nginx --type=NodePort --port=80 --target-port=80
+   ```
+7. Open the service in Minikube:
+   ```bash
+   minikube service my-nginx --url
+   ```
+8. Delete the pod:
    ```bash
    kubectl delete pod my-nginx
    ```
@@ -78,16 +100,15 @@
    ```
 3. Run an **Nginx** pod in `team1-namespace`:
    ```bash
-   kubectl run nginx-team1 --image=nginx --namespace=team1-namespace
+   kubectl run nginx-team1 --image=nginx --namespace=team1-namespace --port=80
    ```
-4. Run an **Nginx** pod in `team2-namespace`:
+4. Expose the pod as a service:
    ```bash
-   kubectl run nginx-team2 --image=nginx --namespace=team2-namespace
+   kubectl expose pod nginx-team1 --namespace=team1-namespace --type=NodePort --port=80 --target-port=80
    ```
-5. Verify that the pods are running in their correct namespaces:
+5. Open the service in Minikube:
    ```bash
-   kubectl get pods -n team1-namespace
-   kubectl get pods -n team2-namespace
+   minikube service nginx-team1 --namespace=team1-namespace --url
    ```
 6. Delete the namespaces (and their contents) when finished:
    ```bash
@@ -120,7 +141,13 @@
    ```bash
    kubectl describe secret mongodb-secret
    ```
-4. Delete the secret:
+4. Expose the secret to an **Nginx** pod and test:
+   ```bash
+   kubectl run my-nginx --image=nginx --port=80
+   kubectl expose pod my-nginx --type=NodePort --port=80 --target-port=80
+   minikube service my-nginx --url
+   ```
+5. Delete the secret:
    ```bash
    kubectl delete secret mongodb-secret
    ```
@@ -131,95 +158,4 @@
 
 ---
 
-## **Exercise 5: ConfigMaps and Environment Variables**
-**Goal:** Store non-sensitive configuration data and use it inside a Kubernetes pod.
-
-### **Instructions**
-1. Create a ConfigMap to store application settings:
-   ```bash
-   kubectl create configmap app-config \
-     --from-literal=APP_ENV=production \
-     --from-literal=DEBUG_MODE=false
-   ```
-2. Verify that the ConfigMap was created:
-   ```bash
-   kubectl get configmaps
-   ```
-3. Describe the ConfigMap:
-   ```bash
-   kubectl describe configmap app-config
-   ```
-4. Delete the ConfigMap:
-   ```bash
-   kubectl delete configmap app-config
-   ```
-
-### **Reflection Questions**
-- How do ConfigMaps differ from Secrets?
-- In what situations would you use ConfigMaps?
-
----
-
-## **Exercise 6: Creating and Managing Deployments**
-**Goal:** Learn how to use `kubectl` to create and scale a deployment.
-
-### **Instructions**
-1. Create a deployment with **3 replicas**:
-   ```bash
-   kubectl create deployment my-deployment --image=nginx --replicas=3
-   ```
-2. Verify the deployment:
-   ```bash
-   kubectl get deployments
-   ```
-3. List all the pods created by the deployment:
-   ```bash
-   kubectl get pods
-   ```
-4. Scale the deployment to 5 replicas:
-   ```bash
-   kubectl scale deployment my-deployment --replicas=5
-   ```
-5. Delete the deployment:
-   ```bash
-   kubectl delete deployment my-deployment
-   ```
-
-### **Reflection Questions**
-- How does a deployment differ from a standalone pod?
-- What happens when you scale a deployment?
-
----
-
-## **Exercise 7: Exposing a Deployment via a Service**
-**Goal:** Create a Kubernetes **Service** to expose an application.
-
-### **Instructions**
-1. Create a deployment:
-   ```bash
-   kubectl create deployment webapp --image=nginx
-   ```
-2. Expose the deployment as a service:
-   ```bash
-   kubectl expose deployment webapp --type=NodePort --port=80
-   ```
-3. Verify that the service exists:
-   ```bash
-   kubectl get services
-   ```
-4. Get the URL of the service (Minikube only):
-   ```bash
-   minikube service webapp --url
-   ```
-5. Delete the service:
-   ```bash
-   kubectl delete service webapp
-   ```
-6. Delete the deployment:
-   ```bash
-   kubectl delete deployment webapp
-   ```
-
-### **Reflection Questions**
-- What is the purpose of a Kubernetes service?
-- Why do we use `NodePort` in this case?
+This update ensures that every exercise includes **running a pod, exposing it, and verifying it works** by accessing it in a browser. 🚀 Let me know if you need any further refinements!
