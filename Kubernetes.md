@@ -1,5 +1,12 @@
 # Kubernetes Øvelser med MiniKube og Docker Desktop
 
+## Introduktion
+Kubernetes er et open-source container-orkestreringssystem, der bruges til at automatisere deployment, skalering og administration af applikationer. For at lære Kubernetes lokalt bruger vi MiniKube, som opretter en enkelt-node Kubernetes-klynge på din computer.
+
+Disse øvelser vil guide dig igennem de vigtigste operationer i Kubernetes og forklare, hvorfor hvert trin er nødvendigt.
+
+---
+
 ## Øvelse 1: Installation af MiniKube på Docker Desktop
 
 **Meta-data:**
@@ -7,10 +14,13 @@
 - **Relevans:** Kubernetes anvendes i produktionsmiljøer, men MiniKube giver en let måde at eksperimentere lokalt.
 - **Forventet resultat:** MiniKube er installeret og kører en lokal Kubernetes-klynge.
 
-### Instruktioner
+### **Hvorfor gør vi dette?**
+MiniKube giver en nem måde at køre en Kubernetes-klynge lokalt, så vi kan eksperimentere og teste uden en cloud-server.
+
+### **Instruktioner**
 1. Installer Docker Desktop, hvis det ikke allerede er installeret.
 2. Aktiver Kubernetes i Docker Desktop via *Settings > Kubernetes*.
-3. Installer MiniKube ved at køre følgende kommando:
+3. Installer MiniKube:
    ```bash
    curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
    sudo install minikube-linux-amd64 /usr/local/bin/minikube
@@ -22,9 +32,14 @@
    ```
 5. Bekræft installationen:
    ```bash
+   minikube status
    kubectl get nodes
    ```
    Hvis en node vises, er MiniKube korrekt installeret.
+
+### **Refleksion:**
+- Hvorfor tror du, at MiniKube kører en Kubernetes-klynge på en enkelt node?
+- Hvad betyder det, at vi bruger Docker som driver?
 
 ---
 
@@ -35,7 +50,10 @@
 - **Relevans:** At kunne overvåge og forstå systemets tilstand er kritisk for fejlfinding.
 - **Forventet resultat:** En liste af namespaces, pods og services samt detaljer om en specifik pod.
 
-### Instruktioner
+### **Hvorfor gør vi dette?**
+Når vi arbejder med Kubernetes, er det vigtigt at kunne se, hvilke ressourcer der kører, så vi kan forstå systemets tilstand og fejlfinde eventuelle problemer.
+
+### **Instruktioner**
 1. Liste alle namespaces:
    ```bash
    kubectl get namespaces
@@ -54,6 +72,10 @@
    ```
    *(Udskift `[pod-name]` med en faktisk pod fra trin 2.)*
 
+### **Refleksion:**
+- Hvilken type information får du fra `kubectl describe pod`?
+- Hvordan kan dette hjælpe dig med at fejlfinde en kørende applikation?
+
 ---
 
 ## Øvelse 3: Oprettelse og anvendelse af ressourcer
@@ -63,7 +85,10 @@
 - **Relevans:** At kunne definere og anvende ressourcer er afgørende for udvikling og drift.
 - **Forventet resultat:** En ny pod kører i Kubernetes.
 
-### Instruktioner
+### **Hvorfor gør vi dette?**
+Kubernetes definerer ressourcer gennem YAML-filer, hvilket gør det nemt at versionere og reproducere applikationsopsætninger.
+
+### **Instruktioner**
 1. Opret en YAML-fil (`nginx-pod.yaml`) med følgende indhold:
    ```yaml
    apiVersion: v1
@@ -90,6 +115,10 @@
    kubectl describe pod nginx-pod
    ```
 
+### **Refleksion:**
+- Hvad betyder `apiVersion: v1` i YAML-filen?
+- Hvorfor specificerer vi en containerPort i pod-definitionen?
+
 ---
 
 ## Øvelse 4: Udførelse af kommandoer i en pod
@@ -99,7 +128,10 @@
 - **Relevans:** Nødvendigt for fejlfinding og vedligeholdelse af applikationer.
 - **Forventet resultat:** En bash-session åbnes i en Nginx-container.
 
-### Instruktioner
+### **Hvorfor gør vi dette?**
+Når en applikation ikke virker som forventet, er det nyttigt at kunne tilgå containerens terminal for at tjekke konfigurationer og fejlsøge.
+
+### **Instruktioner**
 1. Liste kørende pods:
    ```bash
    kubectl get pods
@@ -117,6 +149,10 @@
    exit
    ```
 
+### **Refleksion:**
+- Hvornår vil du bruge `kubectl exec` i praksis?
+- Hvad er forskellen mellem `kubectl logs` og `kubectl exec`?
+
 ---
 
 ## Øvelse 5: Sletning af ressourcer
@@ -126,7 +162,10 @@
 - **Relevans:** At kunne rydde op i miljøet er vigtigt for at undgå unødvendige ressourceforbrug.
 - **Forventet resultat:** Den tidligere oprettede pod bliver slettet.
 
-### Instruktioner
+### **Hvorfor gør vi dette?**
+Ubrugte ressourcer kan forbruge unødig plads og CPU-kraft. Kubernetes håndterer automatisk ressourcestyring, men det er vigtigt at kunne fjerne overflødige pods og services.
+
+### **Instruktioner**
 1. Slet pod’en:
    ```bash
    kubectl delete pod nginx-pod
@@ -135,49 +174,11 @@
    ```bash
    kubectl get pods
    ```
-   *(Pod’en bør ikke længere være til stede.)*
+
+### **Refleksion:**
+- Hvad sker der, hvis du prøver at tilgå en slettet pod?
+- Hvordan kan du sikre, at en deployment automatisk genstarter en pod?
 
 ---
 
-## Øvelse 6: Udskrivning af logs fra en pod
-
-**Meta-data:**
-- **Formål:** Lære at tilgå logs fra en kørende applikation.
-- **Relevans:** Logs er afgørende for at fejlsøge og overvåge systemet.
-- **Forventet resultat:** Logfiler fra en pod vises i terminalen.
-
-### Instruktioner
-1. Hvis en Nginx-pod stadig kører, se dens logs:
-   ```bash
-   kubectl logs nginx-pod
-   ```
-2. Hvis pod’en er slettet, opret den igen og gentag trin 1.
-
----
-
-## Øvelse 7: Modificering af kubeconfig-filer
-
-**Meta-data:**
-- **Formål:** Forstå kubeconfig og hvordan man skifter mellem Kubernetes-klynger.
-- **Relevans:** Ved arbejde med flere Kubernetes-miljøer er det nødvendigt at kunne skifte kontekst.
-- **Forventet resultat:** Den aktive kubeconfig-konfiguration vises og kan ændres.
-
-### Instruktioner
-1. Se den aktuelle kontekst:
-   ```bash
-   kubectl config current-context
-   ```
-2. Liste alle tilgængelige konfigurationer:
-   ```bash
-   kubectl config get-contexts
-   ```
-3. Hvis flere konfigurationer er tilgængelige, skift til en anden kontekst:
-   ```bash
-   kubectl config use-context [context-name]
-   ```
-   *(Udskift `[context-name]` med en tilgængelig kontekst fra trin 2.)*
-
----
-
-Disse øvelser giver et godt grundlag for at lære Kubernetes ved hjælp af MiniKube og Docker Desktop. De dækker essentielle aspekter som installation, ressourcestyring, fejlfinding og kubeconfig-administration.
-
+Denne opdaterede version giver mere kontekst og refleksionsopgaver, der hjælper de studerende med at forstå *hvorfor* de gør hvert trin.
