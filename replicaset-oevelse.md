@@ -35,7 +35,7 @@ Læs følgende sider i dokumentationen:
 
 1. **Opret filen `nginx-replicaset.yaml`** med følgende indhold:
 
-\`\`\`yaml
+```yaml
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
@@ -55,19 +55,19 @@ spec:
         image: nginx
         ports:
         - containerPort: 80
-\`\`\`
+```
 
 2. **Deploy ReplicaSet:**
 
-\`\`\`bash
+```bash
 kubectl apply -f nginx-replicaset.yaml
-\`\`\`
+```
 
 3. **Verificér de kørende Pods:**
 
-\`\`\`bash
+```bash
 kubectl get pods
-\`\`\`
+```
 
 ---
 
@@ -75,15 +75,15 @@ kubectl get pods
 
 4. **Skalér op til 5 Pods:**
 
-\`\`\`bash
+```bash
 kubectl scale rs nginx-replicaset --replicas=5
-\`\`\`
+```
 
 5. **Tjek fordeling på noder:**
 
-\`\`\`bash
+```bash
 kubectl get pods -o wide
-\`\`\`
+```
 
 > 💬 *Diskutér kort: Hvordan fordeles Pods? Er de spredt ud? Hvorfor/hvorfor ikke?*
 
@@ -93,15 +93,15 @@ kubectl get pods -o wide
 
 6. **Slet én Pod manuelt:**
 
-\`\`\`bash
+```bash
 kubectl delete pod <pod-navn>
-\`\`\`
+```
 
 7. **Observer at ReplicaSet automatisk genskaber den manglende Pod:**
 
-\`\`\`bash
+```bash
 kubectl get pods
-\`\`\`
+```
 
 > 💬 *Diskutér: Hvad ville ske, hvis der blev slettet 3 Pods? Hvad hvis en node fejler?*
 
@@ -110,23 +110,26 @@ kubectl get pods
 ### 🤖 Del 4: Introduktion til Horizontal Pod Autoscaling
 
 8. **Tilføj metrics-server til klyngen** (hvis ikke allerede installeret):
-\`\`\`bash
+
+```bash
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
-\`\`\`
+```
 
 9. **Opret en Deployment i stedet for ReplicaSet (HPA virker kun på Deployments):**
 
-\`\`\`bash
+```bash
 kubectl create deployment nginx --image=nginx
-\`\`\`
+```
 
 10. **Eksponer Deployment som service:**
-\`\`\`bash
+
+```bash
 kubectl expose deployment nginx --port=80 --type=NodePort
-\`\`\`
+```
 
 11. **Tilføj CPU-request (kræves for HPA):**
-\`\`\`bash
+
+```bash
 kubectl patch deployment nginx --patch '{
   "spec": {
     "template": {
@@ -143,23 +146,25 @@ kubectl patch deployment nginx --patch '{
     }
   }
 }'
-\`\`\`
+```
 
 12. **Opret HPA for nginx:**
-\`\`\`bash
+
+```bash
 kubectl autoscale deployment nginx --cpu-percent=50 --min=1 --max=10
-\`\`\`
+```
 
 13. **Observer HPA:**
-\`\`\`bash
+
+```bash
 kubectl get hpa
-\`\`\`
+```
 
 ---
 
 ### 🔥 Bonus: Simulér belastning
 
-> Dette kræver en ekstra container eller værktøj til at generere load (f.eks. \`kubectl run -i --tty load-generator --image=busybox /bin/sh\` og kør \`while true; do wget -q -O- http://<nginx-service>; done\`)
+> Dette kræver en ekstra container eller værktøj til at generere load (f.eks. `kubectl run -i --tty load-generator --image=busybox /bin/sh` og kør `while true; do wget -q -O- http://<nginx-service>; done`)
 
 ---
 
