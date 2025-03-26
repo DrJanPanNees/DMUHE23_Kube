@@ -109,7 +109,26 @@ kubectl get pods
 
 ### 🤖 Del 4: Introduktion til Horizontal Pod Autoscaling
 
-8. **Tilføj metrics-server til klyngen** (hvis ikke allerede installeret):
+8. **Aktivér metrics-server i Minikube:**
+
+Hvis du bruger Minikube (anbefalet i undervisningen), kan du nemt aktivere metrics-server med:
+
+```bash
+minikube addons enable metrics-server
+```
+
+Tjek om den kører:
+
+```bash
+kubectl get deployment metrics-server -n kube-system
+```
+
+Når metrics-server er aktiv, kan du bruge kommandoer som:
+
+```bash
+kubectl top pods
+kubectl top nodes
+```
 
 ```bash
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
