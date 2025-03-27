@@ -259,5 +259,3 @@ Hvis du underviser et hold, kan du tilføje konkurrence:
 </html>
 ```
 
-Denne battle tilføjer ekstra motivation og engagement til øvelsen!
-
