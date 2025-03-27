@@ -135,4 +135,7 @@ minikube stop
 
 ---
 
+### 🚀 Klar til GitHub
+
+Du kan gemme denne fil som `README.md` i dit projekt og uploade den til GitHub som dokumentation.
 
