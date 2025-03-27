@@ -134,6 +134,16 @@ minikube service carrom-app --url
 ```
 > Åbn URL'en i din browser.
 
+> 💡 **Bemærk:** Dette er ikke helt det samme som Docker's `-p 8001:80`. Kubernetes vælger som standard en tilfældig port mellem 30000–32767. 
+> Hvis du vil angive præcis hvilken port Kubernetes skal bruge på din node (som i Docker), skal du skrive en Service manuelt og tilføje `nodePort`, fx:
+> ```yaml
+> ports:
+>   - port: 80
+>     targetPort: 80
+>     nodePort: 30001
+> ```
+> Derefter kan du tilgå din app via `http://<minikube-ip>:30001`
+
 ---
 
 ### 🧽 Ryd op
