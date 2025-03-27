@@ -2,7 +2,7 @@
 
 ### 🌟 Formål
 
-Deploy en simpel webapp inspireret af CSSBattle #2 ved brug af Minikube og Kubernetes.
+Deploy en simpel webapp inspireret af CSSBattle #2 ved brug af Minikube og Kubernetes. 
 Denne øvelse giver praktisk erfaring med pods, deployments og services.
 
 ---
@@ -80,6 +80,16 @@ COPY index.html /usr/share/nginx/html/index.html
 ---
 
 #### 5. Byg Docker image
+
+> 💡 **Hvad gør `eval $(minikube docker-env)`?**
+>
+> Denne kommando sætter din terminal op til at bruge Minikube’s interne Docker-engine. På den måde bliver dine Docker-images direkte tilgængelige for Kubernetes i Minikube. Uden denne kommando kan Minikube ikke finde de billeder du bygger lokalt.
+>
+> Nulstil med:
+> ```bash
+> eval $(minikube docker-env -u)
+> ```
+
 ```bash
 eval $(minikube docker-env)
 docker build -t carrom-app .
@@ -126,7 +136,7 @@ minikube service carrom-app --url
 
 ---
 
-### 🪑 Ryd op
+### 🧽 Ryd op
 ```bash
 kubectl delete service carrom-app
 kubectl delete deployment carrom-app
@@ -138,4 +148,56 @@ minikube stop
 ### 🚀 Klar til GitHub
 
 Du kan gemme denne fil som `README.md` i dit projekt og uploade den til GitHub som dokumentation.
+
+---
+
+### 🏆 Bonus: CSSBattle Race Challenge
+
+Hvis du underviser et hold, kan du tilføje konkurrence:
+
+1. **Opdel i hold eller par.**
+2. Giv dem en *ufuldstændig* version af `index.html` (fx mangler farver, placeringer eller nogle `div`s).
+3. Første hold, der får layoutet til at ligne CSSBattle #2 mest muligt – vinder.
+
+> Brug evt. skærmdeling til at sammenligne resultater.
+> Overvej at give point for hurtighed, præcision og kreativitet.
+
+**Eksempel på halvfærdig `index.html` til konkurrencen:**
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CSSBattle Bonus</title>
+  <style>
+    body {
+      background-color: white; /* skal ændres */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .square {
+      width: 50px;
+      height: 50px;
+      /* mangler farve */
+      position: absolute;
+    }
+    .top-left {
+      top: 50px;
+      left: 50px;
+    }
+    /* mangler top-right, bottom-left, bottom-right */
+  </style>
+</head>
+<body>
+  <div class="square top-left"></div>
+  <!-- mangler tre kvadrater -->
+</body>
+</html>
+```
+
+Denne battle tilføjer ekstra motivation og engagement til øvelsen!
 
