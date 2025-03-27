@@ -2,8 +2,7 @@
 
 ### 🌟 Formål
 
-Deploy en simpel webapp inspireret af CSSBattle #2 ved brug af Minikube og Kubernetes. 
-Denne øvelse giver praktisk erfaring med pods, deployments og services.
+Deploy en simpel webapp inspireret af CSSBattle #2 ved brug af Minikube og Kubernetes. Denne øvelse giver praktisk erfaring med pods, deployments og services.
 
 ---
 
@@ -18,6 +17,7 @@ Denne øvelse giver praktisk erfaring med pods, deployments og services.
 ### 🔧 Trin-for-trin guide
 
 #### 1. Start Minikube
+
 ```bash
 minikube start
 ```
@@ -25,6 +25,7 @@ minikube start
 ---
 
 #### 2. Opret projektmappe
+
 ```bash
 mkdir carrom-app
 cd carrom-app
@@ -33,6 +34,7 @@ cd carrom-app
 ---
 
 #### 3. Opret `index.html`
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -72,6 +74,7 @@ cd carrom-app
 ---
 
 #### 4. Opret Dockerfile
+
 ```Dockerfile
 FROM nginx:alpine
 COPY index.html /usr/share/nginx/html/index.html
@@ -81,11 +84,12 @@ COPY index.html /usr/share/nginx/html/index.html
 
 #### 5. Byg Docker image
 
-> 💡 **Hvad gør `eval $(minikube docker-env)`?**
+> 💡 **Hvad gør **``**?**
 >
 > Denne kommando sætter din terminal op til at bruge Minikube’s interne Docker-engine. På den måde bliver dine Docker-images direkte tilgængelige for Kubernetes i Minikube. Uden denne kommando kan Minikube ikke finde de billeder du bygger lokalt.
 >
 > Nulstil med:
+>
 > ```bash
 > eval $(minikube docker-env -u)
 > ```
@@ -98,6 +102,7 @@ docker build -t carrom-app .
 ---
 
 #### 6. Opret og deploy med Kubernetes
+
 ```yaml
 # deployment.yaml
 apiVersion: apps/v1
@@ -117,6 +122,7 @@ spec:
       containers:
       - name: carrom
         image: carrom-app
+        imagePullPolicy: Never
         ports:
         - containerPort: 80
 ```
@@ -128,29 +134,74 @@ kubectl apply -f deployment.yaml
 ---
 
 #### 7. Eksponer applikationen
+
 ```bash
 kubectl expose deployment carrom-app --type=NodePort --port=80
 minikube service carrom-app --url
 ```
+
 > Åbn URL'en i din browser.
 
-> 💡 **Bemærk:** Dette er ikke helt det samme som Docker's `-p 8001:80`. Kubernetes vælger som standard en tilfældig port mellem 30000–32767. 
-> Hvis du vil angive præcis hvilken port Kubernetes skal bruge på din node (som i Docker), skal du skrive en Service manuelt og tilføje `nodePort`, fx:
+> 💡 **Bemærk:** Dette er ikke helt det samme som Docker's `-p 8001:80`. Kubernetes vælger som standard en tilfældig port mellem 30000–32767. Hvis du vil angive præcis hvilken port Kubernetes skal bruge på din node (som i Docker), skal du skrive en Service manuelt og tilføje `nodePort`, fx:
+>
 > ```yaml
 > ports:
 >   - port: 80
 >     targetPort: 80
 >     nodePort: 30001
 > ```
+>
 > Derefter kan du tilgå din app via `http://<minikube-ip>:30001`
 
 ---
 
 ### 🧽 Ryd op
+
 ```bash
 kubectl delete service carrom-app
 kubectl delete deployment carrom-app
 minikube stop
+```
+
+---
+
+### 🧯 Fejlfinding: Pod kører ikke
+
+Hvis du får denne fejl:
+
+```
+❌ Exiting due to SVC_UNREACHABLE: service not available: no running pod for service carrom-app found
+```
+
+eller din pod viser `ImagePullBackOff`, så betyder det typisk, at Kubernetes ikke kan finde det Docker-image du har bygget.
+
+✅ Følg disse trin:
+
+1. Sørg for at bruge Minikube's Docker-engine, før du bygger:
+
+```bash
+eval $(minikube docker-env)
+docker build -t carrom-app .
+```
+
+2. Genstart din deployment:
+
+```bash
+kubectl rollout restart deployment carrom-app
+```
+
+3. Tjek at pod'en kører korrekt:
+
+```bash
+kubectl get pods
+```
+
+> Du bør se STATUS: `Running`
+
+4. Nu burde denne virke:
+
+```bash
+minikube service carrom-app --url
 ```
 
 ---
@@ -169,10 +220,9 @@ Hvis du underviser et hold, kan du tilføje konkurrence:
 2. Giv dem en *ufuldstændig* version af `index.html` (fx mangler farver, placeringer eller nogle `div`s).
 3. Første hold, der får layoutet til at ligne CSSBattle #2 mest muligt – vinder.
 
-> Brug evt. skærmdeling til at sammenligne resultater.
-> Overvej at give point for hurtighed, præcision og kreativitet.
+> Brug evt. skærmdeling til at sammenligne resultater. Overvej at give point for hurtighed, præcision og kreativitet.
 
-**Eksempel på halvfærdig `index.html` til konkurrencen:**
+**Eksempel på halvfærdig **``** til konkurrencen:**
 
 ```html
 <!DOCTYPE html>
