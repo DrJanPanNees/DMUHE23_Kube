@@ -155,6 +155,18 @@ minikube service carrom-app --url
 
 ---
 
+---
+
+### 🔧 Trin-for-trin guide
+
+#### 1. Start Minikube Dashboard
+
+```bash
+minikube dashboard
+```
+
+---
+
 ### 🧽 Ryd op
 
 ```bash
