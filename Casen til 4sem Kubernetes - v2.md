@@ -57,8 +57,8 @@ Frontend eksponeres udadtil via en NodePort service i Minikube, som giver adgang
     - Tilgængelige endpoints (URL, metode, formål)
     - Input/output (fx body, headers, statuskoder)
 - I skal kunne demonstrere hele flowet: fra kode til containerimage til udrulning i Kubernetes.
-- Applikationen skal være tilgængelig via en webadresse (Ingress, hvis valgt).
-- I skal præsentere, hvordan I håndterer skaleringsscenarier.
+- Applikationen skal være tilgængelig via browseren gennem Minikube (fx via NodePort).
+- I skal kunne vise, hvordan I har konfigureret skalering med HPA (valgfrit, hvis det er nået).
 - I skal levere en kort dokumentation (eller præsentation), der beskriver arkitektur, teknologier og best practices.
 
 ---
