@@ -52,8 +52,9 @@ Frontend eksponeres udadtil via en NodePort service i Minikube, som giver adgang
 
 **Afleveringskrav:**
 - Der skal uploades to filer til Wiseflow:
-  1. En rapport (PDF) på 5–10 sider, som beskriver projektet og indeholder systemarkitekturen.
-  2. En zip-fil med jeres YAML-filer til Kubernetes (og evt. Dockerfiles).
+  1. En rapport (PDF) på 5–15 sider, som beskriver projektet og indeholder systemarkitekturen. 
+  2. En "zip-fil" med jeres YAML-file(r) til Kubernetes (og evt. Dockerfiles).
+  3. Det forventes ikke at være en rapport, men en dokumentation over systemet.
 
 - I skal kunne dokumentere og demonstrere jeres API-endpoints, fx med Postman.
   - Lav en Postman Collection med eksempler på kald til jeres API (GET, POST, PUT, DELETE).
@@ -64,7 +65,7 @@ Frontend eksponeres udadtil via en NodePort service i Minikube, som giver adgang
 - I skal kunne demonstrere hele flowet: fra kode til containerimage til udrulning i Kubernetes.
 - Applikationen skal være tilgængelig via browseren gennem Minikube (fx via NodePort).
 - I skal kunne vise, hvordan I har konfigureret skalering med HPA (valgfrit, hvis det er nået).
-- I skal levere en kort dokumentation (eller præsentation), der beskriver arkitektur, teknologier og best practices.
+- I skal levere en dokumentation, der beskriver arkitektur, teknologier og best practices.
 
 ---
 
